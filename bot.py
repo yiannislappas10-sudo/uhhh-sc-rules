@@ -3,6 +3,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+# Replace this number with your actual Discord Server ID
+GUILD_ID = discord.Object(id=1529246492332920872) 
+
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -73,8 +76,12 @@ class SecurityDashboardView(discord.ui.View):
 @bot.event
 async def on_ready():
     bot.add_view(SecurityDashboardView())
-    await bot.tree.sync()
-    print(f"Logged in as {bot.user}")
+    
+    # Syncs slash commands directly to your server on startup
+    bot.tree.copy_global_to(guild=GUILD_ID)
+    await bot.tree.sync(guild=GUILD_ID)
+    
+    print(f"Logged in as {bot.user} - Synced commands to Server ID {GUILD_ID.id}")
 
 
 @bot.tree.command(name="setup_security", description="Post the Aegis 17 Security directives panel")
